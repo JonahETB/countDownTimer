@@ -8,7 +8,6 @@ let time = {
 }
 let alreadyRun; // for deletign previous code if it was previously run
 
-
 //first write creates the base forms and prepare the timer
 function firstWrite () {
 
@@ -76,6 +75,7 @@ function getTime () {
     startTimer(number);
 }
 
+// startTimer functinos as a way to countdown the seconds and minutes
  async function startTimer (number) {
     if (alreadyRun) {
         document.getElementById("timer").remove();
@@ -105,18 +105,18 @@ function getTime () {
             timer.appendChild(secondsElement);
 
     for (let i = number; i > 0; i--) {
-        if (time.seconds[0] === 0) {
+        if (time.seconds[0] === 0 || time.seconds[0] <= 0) {
             if (time.minutes[0] === 0 || time.minutes[0] <= 0) {
                 if (time.hours[0] === 0 || time.hours[0] <= 0) {
                     alert("Time is up");
                 } else {
                     time.hours[0]--;
                     time.minutes[0] += 59;
-                    time.seconds[0] += 60;
+                    time.seconds[0] += 59;
                 }
             } else {
                 time.minutes[0]--;
-                time.seconds[0] += 60;
+                time.seconds[0] += 59;
             }
         } else {
             time.seconds[0]--;
