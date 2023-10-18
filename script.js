@@ -6,6 +6,7 @@ let time = {
     minutes : [0, "minutes", 60],
     seconds : [0, "seconds", 1]
 }
+let alreadyRun; // for deletign previous code if it was previously run
 
 
 //first write creates the base forms and prepare the timer
@@ -13,8 +14,8 @@ function firstWrite () {
 
     let max = 24;
 
-    const formsOutSide = document.createElement('div');
-            formsOutSide.id = 'formsOutSide';
+    const formsOutSide = document.createElement("div");
+            formsOutSide.id = "formsOutSide";
             document.body.appendChild(formsOutSide);
 
     const timerForm = document.createElement("form");
@@ -46,7 +47,6 @@ function firstWrite () {
             submit.value = "ENTER";
             submit.setAttribute("onclick", "getTime()");
             timerForm.appendChild(submit);
-    console.log("we got here");
 }
 
 
@@ -72,38 +72,60 @@ function getTime () {
             num = time.seconds[2];
         }
         number += convert(value, num);
-        console.log(time);
-        console.log()
     }
     startTimer(number);
 }
 
-function startTimer (number) {
+ async function startTimer (number) {
+    if (alreadyRun) {
+        document.getElementById("timer").remove();
+    }
+    alreadyRun = true;
 
-    const timer = document.createElement('div');
-            timer.id = 'timer';
+    const timer = document.createElement("div");
+            timer.id = "timer";
             document.body.appendChild(timer);
 
+    const hoursElement = document.createElement("p");
+            hoursElement.id = "hoursId";
+    const hoursT = document.createTextNode("0");
+            hoursElement.appendChild(hoursT);
+            timer.appendChild(hoursElement);
+
+    const minutesElement = document.createElement("p");
+            minutesElement.id = "minutesId";
+    const minutesT = document.createTextNode("0");
+            minutesElement.appendChild(minutesT)
+            timer.appendChild(minutesElement);
+
+    const secondsElement = document.createElement("p");
+            secondsElement.id = "secondsId";
+    const secondsT = document.createTextNode("0");
+            secondsElement.appendChild(secondsT)
+            timer.appendChild(secondsElement);
+
     for (let i = number; i > 0; i--) {
-        time.seconds[0]--;
-        if (time.hours[0] == 0 && time.minutes[0] == 0 && time.seconds[0] == 0) {
-            alert('time is up');
-        } else if (time.minutes[0] == 0 && time.seconds[0] == 0) {
-            time.minutes[0] += 59;
-            time.seconds[0] += 60;
-            hours--;
-        } else if (time.seconds[0] == 0) {
-            time.seconds[0] += 60;
-            time.minutes[0]--;
+        if (time.seconds[0] === 0) {
+            if (time.minutes[0] === 0 || time.minutes[0] <= 0) {
+                if (time.hours[0] === 0 || time.hours[0] <= 0) {
+                    alert("Time is up");
+                } else {
+                    time.hours[0]--;
+                    time.minutes[0] += 59;
+                    time.seconds[0] += 60;
+                }
+            } else {
+                time.minutes[0]--;
+                time.seconds[0] += 60;
+            }
+        } else {
+            time.seconds[0]--;
         }
-        displayTime();
-        time.seconds[0]--;
-        sleep(1000);
+        document.getElementById("hoursId").innerHTML = time.hours[0];
+        document.getElementById("minutesId").innerHTML = time.minutes[0];
+        document.getElementById("secondsId").innerHTML = time.seconds[0];
+        await sleep(1000);
     }
-}
-
-function displayTime () {
-
 }
 
 function convert (value, num) {
