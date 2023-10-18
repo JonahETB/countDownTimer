@@ -1,21 +1,28 @@
 "use strict"
 
-let hours = [0, "hours"];
-let minutes = [0, "minutes"];
-let seconds = [0, "seconds"];
+// amount/count , text for , div needed for seconds
+let time = {
+    hours : [0, "hours", 3600],
+    minutes : [0, "minutes", 60],
+    seconds : [0, "seconds", 1]
+}
 
 
 //first write creates the base forms and prepare the timer
 function firstWrite () {
 
-
     let max = 24;
 
-    let timerForm = document.createElement("form");
+    const formsOutSide = document.createElement('div');
+            formsOutSide.id = 'formsOutSide';
+            document.body.appendChild(formsOutSide);
+
+    const timerForm = document.createElement("form");
             timerForm.name = "number";
             timerForm.action  = "";
             timerForm.method = "GET";
             timerForm.id = "form";
+            timerForm.setAttribute("onSubmit", "return false;");
             formsOutSide.appendChild(timerForm);
 
     for (let j = 0; j < 3; j++) {
@@ -34,12 +41,12 @@ function firstWrite () {
                 timerForm.appendChild(timerInput);
     }
 
-    var button = document.createElement("input");
-            button.type = "submit";
-            button.id = "btnSendMail";
-            button.value = "ENTER TIME";
-            button.setAttribute("onclick", "getTime()");
-            timerForm.appendChild(button);
+    const submit = document.createElement("input");
+            submit.type = "submit";
+            submit.value = "ENTER";
+            submit.setAttribute("onclick", "getTime()");
+            timerForm.appendChild(submit);
+    console.log("we got here");
 }
 
 
@@ -49,32 +56,58 @@ firstWrite();
 function getTime () {
     // number will be the total time that it takes to end the time (in seconds)
     let number = 0;
-
+    let num = 0;
     for (let j = 0; j < 3; j++ ) {
         let formId = "form" + j
         let value = (document.getElementById(formId).value);
-        console.log(value)
+
+        if (j === 0) {
+            time.hours[0] = value;
+            num = time.hours[2];
+        } else if (j === 1) {
+            time.minutes[0] = value;
+            num = time.minutes[2];
+        } else {
+            time.seconds[0] = value;
+            num = time.seconds[2];
+        }
+        number += convert(value, num);
+        console.log(time);
+        console.log()
     }
-    startTimer(number)
+    startTimer(number);
 }
 
 function startTimer (number) {
 
+    const timer = document.createElement('div');
+            timer.id = 'timer';
+            document.body.appendChild(timer);
+
     for (let i = number; i > 0; i--) {
-        seconds--;
-        if (hours == 0 && minutes == 0 && seconds == 0) {
+        time.seconds[0]--;
+        if (time.hours[0] == 0 && time.minutes[0] == 0 && time.seconds[0] == 0) {
             alert('time is up');
-        } else if (minutes == 0 && seconds == 0) {
-            minutes = 59;
-            seconds = 60;
+        } else if (time.minutes[0] == 0 && time.seconds[0] == 0) {
+            time.minutes[0] += 59;
+            time.seconds[0] += 60;
             hours--;
-        } else if (seconds == 0) {
-            seconds = 60;
-            minutes--;
+        } else if (time.seconds[0] == 0) {
+            time.seconds[0] += 60;
+            time.minutes[0]--;
         }
-        number--;
+        displayTime();
+        time.seconds[0]--;
         sleep(1000);
     }
+}
+
+function displayTime () {
+
+}
+
+function convert (value, num) {
+    return value * num;
 }
 
 //checks the input is over 60
@@ -86,6 +119,7 @@ function inputCheck (id, max) {
         elementinput.value = max
     } 
 }
+
 // makes the code wait a second
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
