@@ -6,9 +6,10 @@ let time = {
     minutes : [0, "minutes", 60],
     seconds : [0, "seconds", 1]
 }
+
 let alreadyRun; // for deletign previous code if it was previously run
 let alreadySound = false; // something to stop rapid alerts
-let sounds = ["sounds/timerEndSound00.mp3", "sounds/timerEndSound01.mp3","sounds/timerEndSound02.mp3","sounds/timerEndSound04.mp3"];
+let sounds = ["sounds/timerEndSound00.mp3", "sounds/timerEndSound01.mp3","sounds/timerEndSound02.mp3","sounds/timerEndSound03.mp3"];
 let randomSelection = Math.round(Math.random() * (sounds.length - 1));
 let sound = new Audio(sounds[randomSelection]);
 
@@ -17,6 +18,7 @@ let sound = new Audio(sounds[randomSelection]);
 function firstWrite () {
 
     let max = 23;
+    let string;
 
     const formsOutSide = document.createElement("div");
             formsOutSide.id = "formsOutSide";
@@ -36,6 +38,23 @@ function firstWrite () {
             max = 59;
         }
 
+        if (j == 0) {
+            string = time.hours[1];
+        } else if (j == 1) {
+            string = time.minutes[1];
+        } else {
+            string = time.seconds[1];
+        }
+
+        const timerDiv = document.createElement("span");
+                timerDiv.id = string + "Id";
+                timerForm.appendChild(timerDiv);
+
+        const labelTimer = document.createElement("label");
+        const textInput = document.createTextNode(string);
+                labelTimer.appendChild(textInput);
+                timerDiv.appendChild(labelTimer);
+
         const timerInput = document.createElement("input");
                 timerInput.type = "number";
                 timerInput.name = "time";
@@ -43,7 +62,7 @@ function firstWrite () {
                 timerInput.id = formId;
                 timerInput.setAttribute("onInput", `inputCheck("${formId}", ${max})`);
                 timerInput.setAttribute("onkeypress", `return event.charCode >= 48 && event.charCode <= 57`);
-                timerForm.appendChild(timerInput);
+                timerDiv.appendChild(timerInput);
     }
 
     const submit = document.createElement("input");
@@ -98,19 +117,19 @@ function getTime () {
 
 
     const hoursElement = document.createElement("td");
-            hoursElement.id = "hoursId";
+            hoursElement.id = "hoursCount";
             hoursElement.className = "timeClass";
     const hoursT = document.createTextNode("0");
             hoursElement.appendChild(hoursT);
 
     const minutesElement = document.createElement("td");
-            minutesElement.id = "minutesId";
+            minutesElement.id = "minutesCount";
             minutesElement.className = "timeClass";
     const minutesT = document.createTextNode("0");
             minutesElement.appendChild(minutesT)
 
     const secondsElement = document.createElement("td");
-            secondsElement.id = "secondsId";
+            secondsElement.id = "secondsCount";
             secondsElement.className = "timeClass";
     const secondsT = document.createTextNode("0");
             secondsElement.appendChild(secondsT);
@@ -146,9 +165,9 @@ function getTime () {
             time.seconds[0]--;
         }
 
-        document.getElementById("hoursId").innerHTML = time.hours[0];
-        document.getElementById("minutesId").innerHTML = time.minutes[0];
-        document.getElementById("secondsId").innerHTML = time.seconds[0];
+        document.getElementById("hoursCount").innerHTML = time.hours[0];
+        document.getElementById("minutesCount").innerHTML = time.minutes[0];
+        document.getElementById("secondsCount").innerHTML = time.seconds[0];
 
         await sleep(1000);
     }
@@ -178,9 +197,3 @@ function inputCheck (id, max) {
 async function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
- 
-// addEventListener("keypress", function(event) {
-//     if (event.key === "Enter") {
-//       event.preventDefault();
-//     }
-//   });

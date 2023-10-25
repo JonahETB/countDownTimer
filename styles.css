@@ -11,3 +11,6 @@ td {
     border: black solid thin;
 }
 
+#hoursId, #minutesId, #secondsId {
+    margin-right: 20px;
+}
